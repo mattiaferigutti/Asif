@@ -1,32 +1,46 @@
 package com.mattiaferigutti.home.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mattiaferigutti.core.data.database.Database
-import com.mattiaferigutti.core.data.repo.TaskRepoImpl
 import com.mattiaferigutti.core.domain.entities.Task
 import com.mattiaferigutti.core.domain.repo.ITaskRepo
+import com.mattiaferigutti.core.domain.usecase.GetTaskUseCase
 import com.mattiaferigutti.core.domain.usecase.StoreTaskUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TasksViewModel(
-  application: Application
-) : AndroidViewModel(application) {
-
-  // todo will be replaced with dependency injection
-  val repo: ITaskRepo = TaskRepoImpl(Database(application.applicationContext).taskDao())
+@HiltViewModel
+class TasksViewModel @Inject constructor(
+  private val repo: ITaskRepo
+) : ViewModel() {
 
   private val _uiState = MutableStateFlow(TasksUIState())
   val uiState = _uiState.asStateFlow()
+
+  init {
+    viewModelScope.launch {
+      GetTaskUseCase(repo)()
+        .collect { tasks ->
+          _uiState.value = TasksUIState(tasks = tasks)
+        }
+    }
+  }
 
   fun onEvent(tasksUIEvent: TasksUIEvent) {
     when(tasksUIEvent) {
       is TasksUIEvent.AddTask -> {
         viewModelScope.launch {
-          StoreTaskUseCase(repo)(Task(title = tasksUIEvent.title))
+          StoreTaskUseCase(repo)(
+            Task(
+              id = 0,
+              title = tasksUIEvent.title,
+              description = "",
+              creationDate = java.time.ZonedDateTime.now()
+            )
+          )
         }
       }
       is TasksUIEvent.CompletedTask -> {

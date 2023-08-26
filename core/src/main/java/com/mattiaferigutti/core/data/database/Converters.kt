@@ -10,12 +10,14 @@ import java.time.ZonedDateTime
 class Converters {
 
   @TypeConverter
-  fun fromDate(date: ZonedDateTime) : Long {
-    return date.toInstant().toEpochMilli()
+  fun fromDate(date: ZonedDateTime?) : Long {
+    return date?.toInstant()?.toEpochMilli() ?: -1L
   }
 
   @TypeConverter
-  fun toDate(millis: Long) : ZonedDateTime {
+  fun toDate(millis: Long) : ZonedDateTime? {
+    if (millis == -1L) return null
+
     return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault())
   }
 }

@@ -6,8 +6,9 @@ import androidx.room.PrimaryKey
 import com.mattiaferigutti.core.domain.entities.Task
 import java.time.ZonedDateTime
 
-@Entity(tableName = "tasks", primaryKeys = ["id"])
+@Entity(tableName = "tasks")
 data class LocalTask(
+
   @PrimaryKey(autoGenerate = true)
   val id: Long,
 

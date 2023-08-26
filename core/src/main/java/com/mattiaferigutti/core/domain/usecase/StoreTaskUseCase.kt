@@ -1,6 +1,5 @@
 package com.mattiaferigutti.core.domain.usecase
 
-import com.mattiaferigutti.core.data.entities.LocalTask
 import com.mattiaferigutti.core.domain.entities.Task
 import com.mattiaferigutti.core.domain.repo.ITaskRepo
 import kotlinx.coroutines.CoroutineDispatcher
