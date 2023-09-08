@@ -10,6 +10,12 @@ interface ITaskRepo {
 
   fun getUncompletedTasks(): Flow<List<Task>>
 
+  fun getTaskById(id: Long): Flow<Task>
+
   suspend fun storeTask(task: Task)
+
+  suspend fun completeTask(task: Task)
+
+  suspend fun updateTask(task: Task)
 
 }

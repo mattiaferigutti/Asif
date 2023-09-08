@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mattiaferigutti.core.domain.entities.Task
 import com.mattiaferigutti.core.domain.repo.ITaskRepo
+import com.mattiaferigutti.core.domain.usecase.CompleteTask
 import com.mattiaferigutti.core.domain.usecase.GetTaskUseCase
+import com.mattiaferigutti.core.domain.usecase.GetUncompletedTasksUseCase
 import com.mattiaferigutti.core.domain.usecase.StoreTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,7 @@ class TasksViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      GetTaskUseCase(repo)()
+      GetUncompletedTasksUseCase(repo)()
         .collect { tasks ->
           _uiState.value = TasksUIState(tasks = tasks)
         }
@@ -44,7 +46,9 @@ class TasksViewModel @Inject constructor(
         }
       }
       is TasksUIEvent.CompletedTask -> {
-        // todo
+        viewModelScope.launch {
+          CompleteTask(repo)(tasksUIEvent.task)
+        }
       }
     }
   }

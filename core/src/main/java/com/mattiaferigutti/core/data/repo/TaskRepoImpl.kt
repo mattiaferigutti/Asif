@@ -21,8 +21,20 @@ class TaskRepoImpl(
     return taskDao.getUncompletedTasks().map { it.map(LocalTask::fromLocal) }
   }
 
+  override fun getTaskById(id: Long): Flow<Task> {
+    return taskDao.getTaskById(id).map { it.fromLocal() }
+  }
+
   override suspend fun storeTask(task: Task) {
     return taskDao.insertTask(task.toLocal())
+  }
+
+  override suspend fun completeTask(task: Task) {
+    return taskDao.updateTask(task.toLocal())
+  }
+
+  override suspend fun updateTask(task: Task) {
+    taskDao.updateTask(task.toLocal())
   }
 
 }

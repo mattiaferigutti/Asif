@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,19 +24,21 @@ fun TaskItem(
   title: String,
   checked: Boolean,
   onCheck: (Boolean) -> Unit,
+  onClick: () -> Unit
 ) {
 
   Surface(
     modifier = modifier
       .fillMaxWidth(),
-    onClick = { onCheck(!checked) },
-    tonalElevation = 8.dp
+    onClick = { onClick() },
+    tonalElevation = 8.dp,
+    shape = MaterialTheme.shapes.medium,
   ) {
 
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(8.dp),
+        .padding(16.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -60,6 +63,7 @@ fun TaskItemPreview() {
     modifier = Modifier,
     title = "Task 1",
     checked = false,
-    onCheck = {}
+    onCheck = {},
+    onClick = {}
   )
 }

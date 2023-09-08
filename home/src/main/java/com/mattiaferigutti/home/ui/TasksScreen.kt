@@ -1,15 +1,14 @@
 package com.mattiaferigutti.home.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -36,17 +35,17 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mattiaferigutti.home.ui.components.TaskItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen(
   modifier: Modifier = Modifier,
-  tasksViewModel: TasksViewModel = hiltViewModel()
+  tasksViewModel: TasksViewModel = hiltViewModel(),
+  goToDetailScreen: (Long) -> Unit
 ) {
 
-  val tasks by tasksViewModel.uiState.collectAsState()
+  val tasksUiState by tasksViewModel.uiState.collectAsState()
 
   var addTask by remember { mutableStateOf(false) }
   var text by remember(TextFieldValue.Saver) {
@@ -106,13 +105,21 @@ fun TasksScreen(
           .padding(paddingValues)
           .padding(bottom = 80.dp),
         content = {
-          items(tasks.tasks.size) { index ->
+          items(tasksUiState.tasks.size) { index ->
             TaskItem(
               modifier = Modifier
                 .padding(8.dp),
-              title = tasks.tasks[index].title,
-              checked = tasks.tasks[index].completedDate != null,
-              onCheck = { tasksViewModel.onEvent(TasksUIEvent.CompletedTask(tasks.tasks[index])) }
+              title = tasksUiState.tasks[index].title,
+              checked = tasksUiState.tasks[index].completedDate != null,
+              onCheck = {
+                tasksViewModel.onEvent(
+                  TasksUIEvent.CompletedTask(tasksUiState.tasks[index])
+                )
+              },
+              onClick = {
+                Log.d("taskId", "${tasksUiState.tasks[index].id}")
+                goToDetailScreen(tasksUiState.tasks[index].id)
+              }
             )
           }
         }

@@ -1,5 +1,5 @@
 plugins {
-  id("com.android.application")
+  id("com.android.library")
   id("org.jetbrains.kotlin.android")
   kotlin("kapt")
   id("com.google.dagger.hilt.android")
@@ -10,11 +10,8 @@ android {
   compileSdk = 33
 
   defaultConfig {
-    applicationId = "com.mattiaferigutti.core"
     minSdk = 24
     targetSdk = 33
-    versionCode = 1
-    versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }

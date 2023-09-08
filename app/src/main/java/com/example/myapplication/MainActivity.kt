@@ -17,6 +17,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.myapplication.navigation.Route
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.mattiaferigutti.home.ui.TasksScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,8 +29,11 @@ class MainActivity : ComponentActivity() {
     setContent {
       MyApplicationTheme {
         // A surface container using the 'background' color from the theme
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          TasksScreen()
+        Surface(
+          modifier = Modifier.fillMaxSize(),
+          color = MaterialTheme.colorScheme.background
+        ) {
+          Route(modifier = Modifier.fillMaxSize())
         }
       }
     }

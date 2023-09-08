@@ -15,7 +15,7 @@ interface TaskDao {
   @Query("SELECT * FROM tasks")
   fun getAllTasks(): Flow<List<LocalTask>>
 
-  @Query("SELECT * FROM tasks WHERE completed_date IS NOT NULL")
+  @Query("SELECT * FROM tasks WHERE completed_date IS -1")
   fun getUncompletedTasks(): Flow<List<LocalTask>>
 
   @Query("SELECT * FROM tasks WHERE id = :id")
